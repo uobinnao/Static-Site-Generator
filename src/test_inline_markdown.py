@@ -1,9 +1,15 @@
 import unittest
 from inline_markdown import (
-    split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_link, split_nodes_image, text_to_textnodes, markdown_to_blocks
+    split_nodes_delimiter,
+    split_nodes_image,
+    split_nodes_link,
+    text_to_textnodes,
+    extract_markdown_links,
+    extract_markdown_images,
 )
+
 from textnode import TextNode, TextType
-# from textnode import TextNode, TextType, split_nodes_delimiter
+
 
 class TestInlineMarkdown(unittest.TestCase):
     def test_delim_bold(self):
@@ -93,12 +99,12 @@ class TestInlineMarkdown(unittest.TestCase):
 
     def test_extract_markdown_links(self):
         matches = extract_markdown_links(
-            "This is text with a [link](https://boot.dev) and [another link](https://blog.boot.dev)"
+            "This is text with a [link](https://boot.dev) and [another link](https://wikipedia.org)"
         )
         self.assertListEqual(
             [
                 ("link", "https://boot.dev"),
-                ("another link", "https://blog.boot.dev"),
+                ("another link", "https://wikipedia.org"),
             ],
             matches,
         )
@@ -150,7 +156,7 @@ class TestInlineMarkdown(unittest.TestCase):
 
     def test_split_links(self):
         node = TextNode(
-            "This is text with a [link](https://boot.dev) and [another link](https://blog.boot.dev) with text that follows",
+            "This is text with a [link](https://boot.dev) and [another link](https://wikipedia.org) with text that follows",
             TextType.TEXT,
         )
         new_nodes = split_nodes_link([node])
@@ -159,7 +165,7 @@ class TestInlineMarkdown(unittest.TestCase):
                 TextNode("This is text with a ", TextType.TEXT),
                 TextNode("link", TextType.LINK, "https://boot.dev"),
                 TextNode(" and ", TextType.TEXT),
-                TextNode("another link", TextType.LINK, "https://blog.boot.dev"),
+                TextNode("another link", TextType.LINK, "https://wikipedia.org"),
                 TextNode(" with text that follows", TextType.TEXT),
             ],
             new_nodes,
@@ -184,6 +190,7 @@ class TestInlineMarkdown(unittest.TestCase):
             ],
             nodes,
         )
-    
+
+
 if __name__ == "__main__":
     unittest.main()

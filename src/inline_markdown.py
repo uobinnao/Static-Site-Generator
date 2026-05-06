@@ -1,5 +1,17 @@
-from textnode import TextNode, TextType
 import re
+
+from textnode import TextNode, TextType
+
+
+def text_to_textnodes(text):
+    nodes = [TextNode(text, TextType.TEXT)]
+    nodes = split_nodes_delimiter(nodes, "**", TextType.BOLD)
+    nodes = split_nodes_delimiter(nodes, "_", TextType.ITALIC)
+    nodes = split_nodes_delimiter(nodes, "`", TextType.CODE)
+    nodes = split_nodes_image(nodes)
+    nodes = split_nodes_link(nodes)
+    return nodes
+
 
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
     new_nodes = []
@@ -86,55 +98,3 @@ def extract_markdown_links(text):
     pattern = r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)"
     matches = re.findall(pattern, text)
     return matches
-
-
-def text_to_textnodes(text):
-    nodes = [TextNode(text, TextType.TEXT)]
-    nodes = split_nodes_delimiter(nodes, "**", TextType.BOLD)
-    nodes = split_nodes_delimiter(nodes, "_", TextType.ITALIC)
-    nodes = split_nodes_delimiter(nodes, "`", TextType.CODE)
-    nodes = split_nodes_image(nodes)
-    nodes = split_nodes_link(nodes)
-    return nodes
-
-
-def markdown_to_blocks(markdown):
-    blocks = []
-    markdown_split = markdown.split("\n\n")
-
-    # print(f"split by newline:\n {markdown_split}\n")
-    # for v in markdown_split:
-    #     print(f'{v}')
-    #     x = v.split("\n\n")
-    #     print(f'x len: {len(x)}')
-    #     print(f'{x}\n')
-
-    for item in markdown_split:
-        # blocks.append(item)
-        # blocks.append(item.strip().strip("\t"))
-        # print(f'item: {item}')
-        # print(f'item: {item.strip()}\n')
-        head_tail_space_remove = item.strip()
-        # print(f'{head_tail_space_remove}\n')
-        blocks.append(head_tail_space_remove)
-
-        # if "\n" not in head_tail_space_remove:
-        #     blocks.append(head_tail_space_remove)
-        #     continue
-
-        # if "\n" in head_tail_space_remove:
-        #     # print(f'{head_tail_space_remove}\n')
-        #     head_tail_space_remove.replace("\n")            
-
-        # inner_split = head_tail_space_remove.split("\n")
-        # # print(f'{inner_split}')
-        
-        # for split in inner_split:
-        #     blocks.append(split)
-
-
-        # block_split = head_tail_space_remove.split("\n")
-        # print(f'{block_split}')
-
-    # print(f'blocks:\n{blocks}')
-    return blocks
